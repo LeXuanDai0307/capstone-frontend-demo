@@ -1,13 +1,14 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.css';
+import { Button } from '@libs/shared-components';
 
 import NxWelcome from './nx-welcome';
 
 import { Route, Routes, Link } from 'react-router-dom';
+import { Size } from '@libs/shared-types';
 
 export function App() {
   return (
     <div>
+      <Button label="Click to Explore" size={Size.LG} />
       <NxWelcome title="capstone-client" />
 
       {/* START: routes */}

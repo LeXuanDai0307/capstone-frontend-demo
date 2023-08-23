@@ -46,7 +46,7 @@
   },
   "workspaceLayout": {
     "appsDir": "packages",
-    "libsDir": "packages"
+    "libsDir": "libs"
   },
   "generators": {
     "@nx/react": {
@@ -61,7 +61,8 @@
       },
       "library": {
         "style": "css",
-        "linter": "eslint"
+        "linter": "eslint",
+        "unitTestRunner": "none"
       }
     }
   }
