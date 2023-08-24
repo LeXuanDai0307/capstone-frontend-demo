@@ -1,0 +1,29 @@
+{
+  "name": "shared-graphql-mesh",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared-graphql-mesh/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/shared-graphql-mesh",
+        "main": "libs/shared-graphql-mesh/src/index.ts",
+        "tsConfig": "libs/shared-graphql-mesh/tsconfig.lib.json",
+        "assets": ["libs/shared-graphql-mesh/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/shared-graphql-mesh/**/*.ts",
+          "libs/shared-graphql-mesh/package.json"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

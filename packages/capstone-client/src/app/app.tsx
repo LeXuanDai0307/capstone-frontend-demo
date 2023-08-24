@@ -1,19 +1,35 @@
 import { Button } from '@libs/shared-components';
 
+import { Route, Routes, Link } from 'react-router-dom';
+import { IBook, Size } from '@libs/shared-types';
+import { gql, useQuery } from '@apollo/client';
 import NxWelcome from './nx-welcome';
 
-import { Route, Routes, Link } from 'react-router-dom';
-import { Size } from '@libs/shared-types';
+const GET_BOOK = gql`
+  query GetBook($id: String!) {
+    Books {
+      book(id: $id) {
+        id
+        title
+      }
+    }
+  }
+`;
 
 export function App() {
+  const { loading, error, data } = useQuery(GET_BOOK, {
+    variables: { id: '11111' },
+  });
+  const book: IBook = data?.Books?.book || null;
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error : {error.message}</p>;
+
   return (
     <div>
       <Button label="Click to Explore" size={Size.LG} />
+      <h1>Book title: {book?.title || 'Book title'}</h1>
       <NxWelcome title="capstone-client" />
-
-      {/* START: routes */}
-      {/* These routes and navigation have been generated for you */}
-      {/* Feel free to move and update them to fit your needs */}
       <br />
       <hr />
       <br />

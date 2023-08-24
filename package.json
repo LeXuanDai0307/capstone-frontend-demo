@@ -1,11 +1,12 @@
 {
   "name": "@capstone-frontend-demo/source",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "dev:capstone-admin": "nx serve capstone-admin",
-    "dev:capstone-client": "nx serve capstone-client",
-    "dev:capstone-bff": "nx serve capstone-bff"
+    "dev:admin": "nx serve capstone-admin",
+    "dev:client": "nx serve capstone-client",
+    "dev:bff": "nx serve capstone-bff",
+    "mesh-build": "nx run shared-graphql-mesh:mesh-build"
   },
   "private": true,
   "devDependencies": {
@@ -57,12 +58,21 @@
     "vitest": "~0.32.0"
   },
   "dependencies": {
+    "@apollo/client": "^3.8.1",
+    "@graphql-mesh/cli": "^0.87.2",
+    "@graphql-mesh/openapi": "^0.95.3",
+    "@graphql-mesh/plugin-mock": "^0.95.2",
+    "@graphql-mesh/transform-encapsulate": "^0.95.2",
+    "@graphql-mesh/transform-filter-schema": "^0.95.2",
+    "@graphql-mesh/transform-rename": "^0.95.2",
     "@swc/helpers": "~0.5.0",
     "axios": "^1.0.0",
+    "dotenv": "^16.3.1",
     "express": "^4.18.1",
+    "graphql": "^16.8.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "6.11.2",
-    "tslib": "^2.3.0"
+    "tslib": "^2.6.2"
   }
 }

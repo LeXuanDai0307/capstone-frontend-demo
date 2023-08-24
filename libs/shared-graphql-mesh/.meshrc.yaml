@@ -1,0 +1,78 @@
+sources:
+  - name: Books
+    handler:
+      openapi:
+        endpoint: http://localhost:3002/
+        source: ./services/books-service/books-definition.json
+    transforms:
+    - rename:
+       renames:
+        - from:
+            type: Query
+            field: AppController_(.*)
+          to:
+            type: Query
+            field: $1
+          useRegExpForFields: true
+    - encapsulate:
+        applyTo:
+          query: true
+          mutation: true
+          subscription: false
+
+  - name: Cities
+    handler:
+      openapi:
+        source: ./services/cities-service/cities-definition.json
+        ignoreErrorResponses: true
+        operationHeaders:
+          'X-RapidAPI-Key': f93d3b393dmsh13fea7cb6981b2ep1dba0ajsn654ffeb48c26
+    transforms:
+    - rename:
+        renames:
+        - from:
+            type: Query
+            field: (.*)UsingGET
+          to:
+            type: Query
+            field: $1
+          useRegExpForFields: true
+    - encapsulate:
+        applyTo:
+          query: true
+          mutation: true
+          subscription: false
+
+additionalTypeDefs: | 
+  extend type Book {
+    category: Category @resolveTo(
+      sourceName: "Books"                                 
+      sourceTypeName: "Query",                             
+      sourceFieldName: "AppController_category",                     
+      requiredSelectionSet: "{ categorieId }",             
+      sourceArgs: {                                         
+          id: "{root.categorieId}"
+      }
+    )
+  }
+
+plugins:
+  - mock:
+      if: true
+      preserveResolvers: false
+      mocks:
+        - apply: Book.id
+          faker: '{{datatype.uuid}}'
+        - apply: Book.authorId
+          faker: '{{datatype.uuid}}'
+        - apply: Book.categorieId
+          faker: '{{datatype.uuid}}'
+        - apply: Book.title
+          faker: '{{name.firstName}}'
+        - apply: BooksQuery.books
+          length: 10
+
+        - apply: Category.id
+          faker: '{{datatype.uuid}}'
+        - apply: Category.name
+          faker: '{{name.gender}}'

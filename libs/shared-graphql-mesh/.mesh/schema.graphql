@@ -1,0 +1,1036 @@
+schema {
+  query: Query
+}
+
+directive @globalOptions(sourceName: String, endpoint: String, operationHeaders: ObjMap, queryStringOptions: ObjMap, queryParams: ObjMap) on OBJECT
+
+directive @httpOperation(path: String, operationSpecificHeaders: ObjMap, httpMethod: HTTPMethod, isBinary: Boolean, requestBaseBody: ObjMap, queryParamArgMap: ObjMap, queryStringOptionsByParam: ObjMap) on FIELD_DEFINITION
+
+directive @enum(value: String) on ENUM_VALUE
+
+directive @resolveTo(requiredSelectionSet: String, sourceName: String!, sourceTypeName: String!, sourceFieldName: String!, sourceSelectionSet: String, sourceArgs: ResolveToSourceArgs, keyField: String, keysArg: String, pubsubTopic: String, filterBy: String, additionalArgs: ResolveToSourceArgs, result: String, resultType: String) on FIELD_DEFINITION
+
+type Query @globalOptions(sourceName: "Cities", endpoint: "https://wft-geo-db.p.rapidapi.com/v1", operationHeaders: "{\"X-RapidAPI-Key\":\"f93d3b393dmsh13fea7cb6981b2ep1dba0ajsn654ffeb48c26\"}") {
+  Books: BooksQuery!
+  Cities: CitiesQuery!
+}
+
+type Book {
+  id: String!
+  authorId: String!
+  categorieId: String!
+  title: String!
+  category: Category @resolveTo(sourceName: "Books", sourceTypeName: "Query", sourceFieldName: "AppController_category", requiredSelectionSet: "{ categorieId }", sourceArgs: {id: "{root.categorieId}"})
+}
+
+type Category {
+  id: String!
+  name: String!
+}
+
+scalar ObjMap
+
+enum HTTPMethod {
+  GET
+  HEAD
+  POST
+  PUT
+  DELETE
+  CONNECT
+  OPTIONS
+  TRACE
+  PATCH
+}
+
+type BooksQuery {
+  books: [Book] @httpOperation(path: "/books", operationSpecificHeaders: "{\"accept\":\"application/json\"}", httpMethod: GET)
+  categories: [Category] @httpOperation(path: "/categories", operationSpecificHeaders: "{\"accept\":\"application/json\"}", httpMethod: GET)
+  book(id: String!): Book @httpOperation(path: "/books/{args.id}", operationSpecificHeaders: "{\"accept\":\"application/json\"}", httpMethod: GET)
+  category(id: String!): Category @httpOperation(path: "/categories/{args.id}", operationSpecificHeaders: "{\"accept\":\"application/json\"}", httpMethod: GET)
+}
+
+"A list of populated places"
+type Populated_Places_Response {
+  errors: [Error]
+  links: [Link]
+  metadata: Metadata
+  data: [PopulatedPlaceSummary]
+}
+
+"An error that occurred processing the request"
+type Error {
+  code: ErrorCode
+  message: String
+}
+
+"One of a set of enumerated error codes representing the types of errors that can occur processing a\nrequest"
+enum ErrorCode {
+  ACCESS_DENIED
+  ENTITY_NOT_FOUND
+  INCOMPATIBLE
+  PARAM_INVALID
+  PARAMS_MUTUALLY_EXCLUSIVE
+  REQUEST_UNPROCESSABLE
+}
+
+"A HATEAOS link"
+type Link {
+  href: String
+  rel: String
+}
+
+"Result metadata (currently only associated with collection results)"
+type Metadata {
+  "The zero-ary offset into the results (0 is the first result)"
+  currentOffset: BigInt
+  "The total number of results across pages"
+  totalCount: BigInt
+}
+
+"The `BigInt` scalar type represents non-fractional signed whole numeric values."
+scalar BigInt
+
+"Minimal populated-place info"
+type PopulatedPlaceSummary {
+  "The country name (varies by languageCode)"
+  country: String
+  "The ISO-3166 country code"
+  countryCode: String
+  "Included if this is the result of a distance query"
+  distance: Float
+  "The place GeoDB native id"
+  id: Int
+  "The place latittude (-90.0 to 90.0)"
+  latitude: Float
+  "The place longitude (-180.0 to 180.0)"
+  longitude: Float
+  "The place name (varies by languageCode)"
+  name: String
+  "The place population"
+  population: Int
+  "The region name (varies by languageCode)"
+  region: String
+  "The ISO or FIPS region code"
+  regionCode: String
+  type: PopulatedPlaceType
+  "The place WikiData id"
+  wikiDataId: String
+}
+
+"One of a set of enumerated populated-place types known by the service (currently only level-2 admin divisions and\ncities)"
+enum PopulatedPlaceType {
+  ADM2
+  CITY
+}
+
+"Populated-place details response"
+type Populated_Place_Response {
+  errors: [Error]
+  data: Populated_Place_Details
+}
+
+"Full populated-place details"
+type Populated_Place_Details {
+  "The country name (varies by languageCode)"
+  country: String
+  "The ISO-3166 country code"
+  countryCode: String
+  "If this place has been soft-deleted"
+  deleted: Boolean
+  "The place elevation (meters) above sea level"
+  elevationMeters: Int
+  "The place GeoDB native id"
+  id: Int
+  "The place latittude (-90.0 to 90.0)"
+  latitude: Float
+  "The place longitude (-180.0 to 180.0)"
+  longitude: Float
+  "The place name (varies by languageCode)"
+  name: String
+  "The place population"
+  population: Int
+  "The region name (varies by languageCode)"
+  region: String
+  "The ISO or FIPS region code"
+  regionCode: String
+  "The place timezone id"
+  timezone: String
+  type: PopulatedPlaceType
+  "The place WikiData id"
+  wikiDataId: String
+}
+
+"An ISO-6801 date-time response"
+type Date_Time_Response {
+  errors: [Error]
+  "The date-time in ISO-6801 format: yyyyMMdd'T'HHmmssZ"
+  data: DateTime
+}
+
+"A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar."
+scalar DateTime
+
+"A decimal distance (in miles or kilometers)"
+type Distance_Response {
+  errors: [Error]
+  "The distance in units as set by the distanceUnit param (defaults to miles)"
+  data: Float
+}
+
+"An ISO-8601 time response"
+type Time_Response {
+  errors: [Error]
+  "The time in ISO-8601 format: HHmmss.SSSZ"
+  data: String
+}
+
+"A list of countries"
+type Countries_Response {
+  errors: [Error]
+  links: [Link]
+  metadata: Metadata
+  data: [Country_Summary]
+}
+
+"Minimal country info"
+type Country_Summary {
+  "The ISO-3166 country code"
+  code: String
+  "A list of supported ISO-4217 currency codes"
+  currencyCodes: [String]
+  "The country name (varies by languageCode)"
+  name: String
+  "The country WikiData id"
+  wikiDataId: String
+}
+
+"Country details response"
+type Country_Response {
+  errors: [Error]
+  data: Country_Details
+}
+
+"Full country details"
+type Country_Details {
+  "The country dialing prefix"
+  callingCode: String
+  "The ISO-3166 country code"
+  code: String
+  "A list of supported ISO-4217 currency codes"
+  currencyCodes: [String]
+  "The country flag image"
+  flagImageUri: String
+  "The country name (varies by languageCode)"
+  name: String
+  "The number of regions in this country"
+  numRegions: Int
+  "The country WikiData id"
+  wikiDataId: String
+}
+
+"A list of country regions"
+type Country_Regions_Response {
+  errors: [Error]
+  links: [Link]
+  metadata: Metadata
+  "A list of RegionSummaries"
+  data: [Country_Region_Summary]
+}
+
+"Minimal country region info"
+type Country_Region_Summary {
+  "An ISO-3166 country code"
+  countryCode: String
+  "The FIPS 10-4 region code"
+  fipsCode: String
+  "The ISO region code"
+  isoCode: String
+  "The region name (varies by languageCode)"
+  name: String
+  "The region WikiData id"
+  wikiDataId: String
+}
+
+"Country region details response"
+type Country_Region_Response {
+  errors: [Error]
+  data: Country_Region_Details
+}
+
+"Full country region details"
+type Country_Region_Details {
+  "The region's capital city (varies by languageCode)"
+  capital: String
+  "An ISO-3166 country code"
+  countryCode: String
+  "The FIPS 10-4 region code"
+  fipsCode: String
+  "The ISO region code"
+  isoCode: String
+  "The region name (varies by languageCode)"
+  name: String
+  "The number of cities in this region"
+  numCities: Int
+  "The region WikiData id"
+  wikiDataId: String
+}
+
+"A list of currencies"
+type Currencies_Response {
+  errors: [Error]
+  links: [Link]
+  metadata: Metadata
+  data: [Currency]
+}
+
+"Currency info"
+type Currency {
+  "The ISO-4217 currency code"
+  code: String
+  "A list of ISO-3166 country codes of countries supporting this currency"
+  countryCodes: [String]
+  "The currency symbol"
+  symbol: String
+}
+
+"A list of languages supported by the system"
+type Languages_Response {
+  errors: [Error]
+  links: [Link]
+  metadata: Metadata
+  data: [Language]
+}
+
+"A language supported by the service"
+type Language {
+  code: query_getLanguagesUsingGET_allOf_1_data_items_code
+  name: String
+}
+
+enum query_getLanguagesUsingGET_allOf_1_data_items_code {
+  undefined
+  aa
+  ab
+  ae
+  af
+  ak
+  am
+  an
+  ar
+  as
+  av
+  ay
+  az
+  ba
+  be
+  bg
+  bh
+  bi
+  bm
+  bn
+  bo
+  br
+  bs
+  ca
+  ce
+  ch
+  co
+  cr
+  cs
+  cu
+  cv
+  cy
+  da
+  de
+  dv
+  dz
+  ee
+  el
+  en
+  eo
+  es
+  et
+  eu
+  fa
+  ff
+  fi
+  fj
+  fo
+  fr
+  fy
+  ga
+  gd
+  gl
+  gn
+  gu
+  gv
+  ha
+  he
+  hi
+  ho
+  hr
+  ht
+  hu
+  hy
+  hz
+  ia
+  id
+  ie
+  ig
+  ii
+  ik
+  io
+  is
+  it
+  iu
+  ja
+  jv
+  ka
+  kg
+  ki
+  kj
+  kk
+  kl
+  km
+  kn
+  ko
+  kr
+  ks
+  ku
+  kv
+  kw
+  ky
+  la
+  lb
+  lg
+  li
+  ln
+  lo
+  lt
+  lu
+  lv
+  mg
+  mh
+  mi
+  mk
+  ml
+  mn
+  mr
+  ms
+  mt
+  my
+  na
+  nb
+  nd
+  ne
+  ng
+  nl
+  nn
+  no
+  nr
+  nv
+  ny
+  oc
+  oj
+  om
+  or
+  os
+  pa
+  pi
+  pl
+  ps
+  pt
+  qu
+  rm
+  rn
+  ro
+  ru
+  rw
+  sa
+  sc
+  sd
+  se
+  sg
+  si
+  sk
+  sl
+  sm
+  sn
+  so
+  sq
+  sr
+  ss
+  st
+  su
+  sv
+  sw
+  ta
+  te
+  tg
+  th
+  ti
+  tk
+  tl
+  tn
+  to
+  tr
+  ts
+  tt
+  tw
+  ty
+  ug
+  uk
+  ur
+  uz
+  ve
+  vi
+  vo
+  wa
+  wo
+  xh
+  yi
+  yo
+  za
+  zh
+  zu
+}
+
+"A list of locales"
+type Locales_Response {
+  errors: [Error]
+  links: [Link]
+  metadata: Metadata
+  data: [Locale]
+}
+
+"A locale representing a language/region combination"
+type Locale {
+  "The locale code"
+  code: String
+}
+
+"A list of time-zones"
+type Time_Zones_Response {
+  errors: [Error]
+  links: [Link]
+  metadata: Metadata
+  data: [Time_Zone]
+}
+
+"A time-zone"
+type Time_Zone {
+  "The time-zone id"
+  id: String
+  "The time-zone name"
+  name: String
+  "The number of hours this time-zone is offset from UTC"
+  rawUtcOffsetHours: Int
+}
+
+"A time-zone"
+type Time_Zone_Response {
+  errors: [Error]
+  "The time-zone id"
+  id: String
+  "The time-zone name"
+  name: String
+  "The number of hours this time-zone is offset from UTC"
+  rawUtcOffsetHours: Int
+}
+
+type CitiesQuery {
+  "Find administrative divisions, filtering by optional criteria. If no criteria are set, you will get back all\nknown divisions.\n"
+  findAdminDivisions(
+    "Only places near this location. Latitude/longitude in ISO-6709 format: ±DD.DDDD±DDD.DDDD"
+    location: String
+    "The location radius within which to find places"
+    radius: Int
+    "The unit of distance: MI | KM"
+    distanceUnit: String = "MI"
+    "Only places in these countries (comma-delimited country codes or WikiData ids)"
+    countryIds: String
+    "Only places NOT in these countries (comma-delimited country codes or WikiData ids)"
+    excludedCountryIds: String
+    "Only places having at least this population"
+    minPopulation: Int
+    "Only places having no more than this population"
+    maxPopulation: Int
+    "Only entities whose names start with this prefix. If languageCode is set, the prefix will be matched on the name\nas it appears in that language."
+    namePrefix: String
+    "When name-prefix matching, whether or not to match on names in the default language if a non-default languageCode is set."
+    namePrefixDefaultLangResults: Boolean = true
+    "Only places in these time-zones (comma-delimited)"
+    timeZoneIds: String
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Include HATEOAS-style links in results"
+    hateoasMode: Boolean = true
+    "Display results in this language"
+    languageCode: String
+    "The maximum number of results to retrieve"
+    limit: Int = 10
+    "The zero-ary offset index into the results"
+    offset: Int
+    "How to sort places. \nFormat: ±SORT_FIELD,±SORT_FIELD \nwhere SORT_FIELD = countryCode | elevation | name | population"
+    sort: String
+    "Whether to include any divisions marked deleted: ALL | SINCE_YESTERDAY | SINCE_LAST_WEEK | NONE"
+    includeDeleted: String = "NONE"
+  ): Populated_Places_Response @httpOperation(path: "/geo/adminDivisions", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"location\":\"location\",\"radius\":\"radius\",\"distanceUnit\":\"distanceUnit\",\"countryIds\":\"countryIds\",\"excludedCountryIds\":\"excludedCountryIds\",\"minPopulation\":\"minPopulation\",\"maxPopulation\":\"maxPopulation\",\"namePrefix\":\"namePrefix\",\"namePrefixDefaultLangResults\":\"namePrefixDefaultLangResults\",\"timeZoneIds\":\"timeZoneIds\",\"asciiMode\":\"asciiMode\",\"hateoasMode\":\"hateoasMode\",\"languageCode\":\"languageCode\",\"limit\":\"limit\",\"offset\":\"offset\",\"sort\":\"sort\",\"includeDeleted\":\"includeDeleted\"}")
+  "Get the details for a specific administrative division, including location coordinates, population, and\nelevation above sea-level (if available).\n"
+  getAdminDivision(
+    "An admin-division id (either native 'id' or 'wikiDataId')"
+    divisionId: String!
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Display results in this language"
+    languageCode: String
+  ): Populated_Place_Response @httpOperation(path: "/geo/adminDivisions/{args.divisionId}", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"asciiMode\":\"asciiMode\",\"languageCode\":\"languageCode\"}")
+  "Find cities near the given administrative division, filtering by optional criteria. If no criteria are set, you\nwill get back all known cities.\n"
+  findCitiesNearAdminDivision(
+    "An admin-division id (either native 'id' or 'wikiDataId')"
+    divisionId: String!
+    "The location radius within which to find places"
+    radius: Int
+    "The unit of distance: MI | KM"
+    distanceUnit: String = "MI"
+    "Only places in these countries (comma-delimited country codes or WikiData ids)"
+    countryIds: String
+    "Only places NOT in these countries (comma-delimited country codes or WikiData ids)"
+    excludedCountryIds: String
+    "Only places having at least this population"
+    minPopulation: Int
+    "Only places having no more than this population"
+    maxPopulation: Int
+    "Only entities whose names start with this prefix. If languageCode is set, the prefix will be matched on the name\nas it appears in that language."
+    namePrefix: String
+    "When name-prefix matching, whether or not to match on names in the default language if a non-default languageCode is set."
+    namePrefixDefaultLangResults: Boolean = true
+    "Only places in these time-zones (comma-delimited)"
+    timeZoneIds: String
+    "Only places for these types (comma-delimited): CITY | ADM2"
+    types: String
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Include HATEOAS-style links in results"
+    hateoasMode: Boolean = true
+    "Display results in this language"
+    languageCode: String
+    "The maximum number of results to retrieve"
+    limit: Int = 10
+    "The zero-ary offset index into the results"
+    offset: Int
+    "How to sort places. \nFormat: ±SORT_FIELD,±SORT_FIELD \nwhere SORT_FIELD = countryCode | elevation | name | population"
+    sort: String
+    "Whether to include any divisions marked deleted: ALL | SINCE_YESTERDAY | SINCE_LAST_WEEK | NONE"
+    includeDeleted: String = "NONE"
+  ): Populated_Places_Response @httpOperation(path: "/geo/adminDivisions/{args.divisionId}/nearbyCities", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"radius\":\"radius\",\"distanceUnit\":\"distanceUnit\",\"countryIds\":\"countryIds\",\"excludedCountryIds\":\"excludedCountryIds\",\"minPopulation\":\"minPopulation\",\"maxPopulation\":\"maxPopulation\",\"namePrefix\":\"namePrefix\",\"namePrefixDefaultLangResults\":\"namePrefixDefaultLangResults\",\"timeZoneIds\":\"timeZoneIds\",\"types\":\"types\",\"asciiMode\":\"asciiMode\",\"hateoasMode\":\"hateoasMode\",\"languageCode\":\"languageCode\",\"limit\":\"limit\",\"offset\":\"offset\",\"sort\":\"sort\",\"includeDeleted\":\"includeDeleted\"}")
+  "Find administrative divisions near the given origin division, filtering by optional criteria. If no criteria\nare set, you will get back all known divisions.\n"
+  findDivisionsNearAdminDivision(
+    "An admin-division id (either native 'id' or 'wikiDataId')"
+    divisionId: String!
+    "The location radius within which to find places"
+    radius: Int
+    "The unit of distance: MI | KM"
+    distanceUnit: String = "MI"
+    "Only places in these countries (comma-delimited country codes or WikiData ids)"
+    countryIds: String
+    "Only places NOT in these countries (comma-delimited country codes or WikiData ids)"
+    excludedCountryIds: String
+    "Only places having at least this population"
+    minPopulation: Int
+    "Only places having no more than this population"
+    maxPopulation: Int
+    "Only entities whose names start with this prefix. If languageCode is set, the prefix will be matched on the name\nas it appears in that language."
+    namePrefix: String
+    "When name-prefix matching, whether or not to match on names in the default language if a non-default languageCode is set."
+    namePrefixDefaultLangResults: Boolean = true
+    "Only places in these time-zones (comma-delimited)"
+    timeZoneIds: String
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Include HATEOAS-style links in results"
+    hateoasMode: Boolean = true
+    "Display results in this language"
+    languageCode: String
+    "The maximum number of results to retrieve"
+    limit: Int = 10
+    "The zero-ary offset index into the results"
+    offset: Int
+    "How to sort places. \nFormat: ±SORT_FIELD,±SORT_FIELD \nwhere SORT_FIELD = countryCode | elevation | name | population"
+    sort: String
+    "Whether to include any divisions marked deleted: ALL | SINCE_YESTERDAY | SINCE_LAST_WEEK | NONE"
+    includeDeleted: String = "NONE"
+  ): Populated_Places_Response @httpOperation(path: "/geo/adminDivisions/{args.divisionId}/nearbyDivisions", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"radius\":\"radius\",\"distanceUnit\":\"distanceUnit\",\"countryIds\":\"countryIds\",\"excludedCountryIds\":\"excludedCountryIds\",\"minPopulation\":\"minPopulation\",\"maxPopulation\":\"maxPopulation\",\"namePrefix\":\"namePrefix\",\"namePrefixDefaultLangResults\":\"namePrefixDefaultLangResults\",\"timeZoneIds\":\"timeZoneIds\",\"asciiMode\":\"asciiMode\",\"hateoasMode\":\"hateoasMode\",\"languageCode\":\"languageCode\",\"limit\":\"limit\",\"offset\":\"offset\",\"sort\":\"sort\",\"includeDeleted\":\"includeDeleted\"}")
+  "Find cities, filtering by optional criteria. If no criteria are set, you will get back all known cities.\n"
+  findCities(
+    "Only places near this location. Latitude/longitude in ISO-6709 format: ±DD.DDDD±DDD.DDDD"
+    location: String
+    "The location radius within which to find places"
+    radius: Int
+    "The unit of distance: MI | KM"
+    distanceUnit: String = "MI"
+    "Only places in these countries (comma-delimited country codes or WikiData ids)"
+    countryIds: String
+    "Only places NOT in these countries (comma-delimited country codes or WikiData ids)"
+    excludedCountryIds: String
+    "Only places having at least this population"
+    minPopulation: Int
+    "Only places having no more than this population"
+    maxPopulation: Int
+    "Only entities whose names start with this prefix. If languageCode is set, the prefix will be matched on the name\nas it appears in that language."
+    namePrefix: String
+    "When name-prefix matching, whether or not to match on names in the default language if a non-default languageCode is set."
+    namePrefixDefaultLangResults: Boolean = true
+    "Only places in these time-zones (comma-delimited)"
+    timeZoneIds: String
+    "Only places for these types (comma-delimited): CITY | ADM2"
+    types: String
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Include HATEOAS-style links in results"
+    hateoasMode: Boolean = true
+    "Display results in this language"
+    languageCode: String
+    "The maximum number of results to retrieve"
+    limit: Int = 10
+    "The zero-ary offset index into the results"
+    offset: Int
+    "How to sort places. \nFormat: ±SORT_FIELD,±SORT_FIELD \nwhere SORT_FIELD = countryCode | elevation | name | population"
+    sort: String
+    "Whether to include any divisions marked deleted: ALL | SINCE_YESTERDAY | SINCE_LAST_WEEK | NONE"
+    includeDeleted: String = "NONE"
+  ): Populated_Places_Response @httpOperation(path: "/geo/cities", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"location\":\"location\",\"radius\":\"radius\",\"distanceUnit\":\"distanceUnit\",\"countryIds\":\"countryIds\",\"excludedCountryIds\":\"excludedCountryIds\",\"minPopulation\":\"minPopulation\",\"maxPopulation\":\"maxPopulation\",\"namePrefix\":\"namePrefix\",\"namePrefixDefaultLangResults\":\"namePrefixDefaultLangResults\",\"timeZoneIds\":\"timeZoneIds\",\"types\":\"types\",\"asciiMode\":\"asciiMode\",\"hateoasMode\":\"hateoasMode\",\"languageCode\":\"languageCode\",\"limit\":\"limit\",\"offset\":\"offset\",\"sort\":\"sort\",\"includeDeleted\":\"includeDeleted\"}")
+  "Get the details for a specific city, including location coordinates, population, and elevation above sea-level\n(if available).\n"
+  getCity(
+    "A city id (either native 'id' or 'wikiDataId')"
+    cityId: String!
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Display results in this language"
+    languageCode: String
+  ): Populated_Place_Response @httpOperation(path: "/geo/cities/{args.cityId}", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"asciiMode\":\"asciiMode\",\"languageCode\":\"languageCode\"}")
+  "Get city date-time"
+  getCityDateTime(
+    "A city id (either native 'id' or 'wikiDataId')"
+    cityId: String!
+  ): Date_Time_Response @httpOperation(path: "/geo/cities/{args.cityId}/dateTime", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET)
+  "Get distance from the given city"
+  getCityDistance(
+    "A city id (either native 'id' or 'wikiDataId')"
+    cityId: String!
+    "Distance to this city"
+    toCityId: String!
+    "The unit of distance: MI | KM"
+    distanceUnit: String = "MI"
+  ): Distance_Response @httpOperation(path: "/geo/cities/{args.cityId}/distance", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"toCityId\":\"toCityId\",\"distanceUnit\":\"distanceUnit\"}")
+  "Get the details for the containing populated place (e.g., its county or other administrative division), including location coordinates, population, and elevation above sea-level\n(if available).\n"
+  getCityLocatedIn(
+    "A city id (either native 'id' or 'wikiDataId')"
+    cityId: String!
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Display results in this language"
+    languageCode: String
+  ): Populated_Place_Response @httpOperation(path: "/geo/cities/{args.cityId}/locatedIn", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"asciiMode\":\"asciiMode\",\"languageCode\":\"languageCode\"}")
+  "Find cities near the given origin city, filtering by optional criteria. If no criteria are set, you will get\nback all known cities.\n"
+  findCitiesNearCity(
+    "A city id (either native 'id' or 'wikiDataId')"
+    cityId: String!
+    "The location radius within which to find places"
+    radius: Int
+    "The unit of distance: MI | KM"
+    distanceUnit: String = "MI"
+    "Only places in these countries (comma-delimited country codes or WikiData ids)"
+    countryIds: String
+    "Only places NOT in these countries (comma-delimited country codes or WikiData ids)"
+    excludedCountryIds: String
+    "Only places having at least this population"
+    minPopulation: Int
+    "Only places having no more than this population"
+    maxPopulation: Int
+    "Only entities whose names start with this prefix. If languageCode is set, the prefix will be matched on the name\nas it appears in that language."
+    namePrefix: String
+    "When name-prefix matching, whether or not to match on names in the default language if a non-default languageCode is set."
+    namePrefixDefaultLangResults: Boolean = true
+    "Only places in these time-zones (comma-delimited)"
+    timeZoneIds: String
+    "Only places for these types (comma-delimited): CITY | ADM2"
+    types: String
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Include HATEOAS-style links in results"
+    hateoasMode: Boolean = true
+    "Display results in this language"
+    languageCode: String
+    "The maximum number of results to retrieve"
+    limit: Int = 10
+    "The zero-ary offset index into the results"
+    offset: Int
+    "How to sort places. \nFormat: ±SORT_FIELD,±SORT_FIELD \nwhere SORT_FIELD = countryCode | elevation | name | population"
+    sort: String
+    "Whether to include any divisions marked deleted: ALL | SINCE_YESTERDAY | SINCE_LAST_WEEK | NONE"
+    includeDeleted: String = "NONE"
+  ): Populated_Places_Response @httpOperation(path: "/geo/cities/{args.cityId}/nearbyCities", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"radius\":\"radius\",\"distanceUnit\":\"distanceUnit\",\"countryIds\":\"countryIds\",\"excludedCountryIds\":\"excludedCountryIds\",\"minPopulation\":\"minPopulation\",\"maxPopulation\":\"maxPopulation\",\"namePrefix\":\"namePrefix\",\"namePrefixDefaultLangResults\":\"namePrefixDefaultLangResults\",\"timeZoneIds\":\"timeZoneIds\",\"types\":\"types\",\"asciiMode\":\"asciiMode\",\"hateoasMode\":\"hateoasMode\",\"languageCode\":\"languageCode\",\"limit\":\"limit\",\"offset\":\"offset\",\"sort\":\"sort\",\"includeDeleted\":\"includeDeleted\"}")
+  "Get city time"
+  getCityTime(
+    "A city id (either native 'id' or 'wikiDataId')"
+    cityId: String!
+  ): Time_Response @httpOperation(path: "/geo/cities/{args.cityId}/time", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET)
+  "Find countries, filtering by optional criteria. If no criteria are set, you will get back all known countries.\n"
+  getCountries(
+    "Only countries supporting this currency"
+    currencyCode: String
+    "Only entities whose names start with this prefix. If languageCode is set, the prefix will be matched on the name\nas it appears in that language."
+    namePrefix: String
+    "When name-prefix matching, whether or not to match on names in the default language if a non-default languageCode is set."
+    namePrefixDefaultLangResults: Boolean = true
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Include HATEOAS-style links in results"
+    hateoasMode: Boolean = true
+    "Display results in this language"
+    languageCode: String
+    "The maximum number of results to retrieve"
+    limit: Int = 10
+    "The zero-ary offset index into the results"
+    offset: Int
+    "How to sort countries. \nFormat: ±SORT_FIELD \nwhere SORT_FIELD = code | name"
+    sort: String
+  ): Countries_Response @httpOperation(path: "/geo/countries", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"currencyCode\":\"currencyCode\",\"namePrefix\":\"namePrefix\",\"namePrefixDefaultLangResults\":\"namePrefixDefaultLangResults\",\"asciiMode\":\"asciiMode\",\"hateoasMode\":\"hateoasMode\",\"languageCode\":\"languageCode\",\"limit\":\"limit\",\"offset\":\"offset\",\"sort\":\"sort\"}")
+  "Get the details for a specific country, including number of regions."
+  getCountry(
+    "An ISO-3166 country code or WikiData id"
+    countryId: String!
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Display results in this language"
+    languageCode: String
+  ): Country_Response @httpOperation(path: "/geo/countries/{args.countryId}", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"asciiMode\":\"asciiMode\",\"languageCode\":\"languageCode\"}")
+  "Get all regions in a specific country. These could be states, provinces, districts, or otherwise major\npolitical divisions.\n"
+  getRegions(
+    "An ISO-3166 country code or WikiData id"
+    countryId: String!
+    "Only entities whose names start with this prefix. If languageCode is set, the prefix will be matched on the name\nas it appears in that language."
+    namePrefix: String
+    "When name-prefix matching, whether or not to match on names in the default language if a non-default languageCode is set."
+    namePrefixDefaultLangResults: Boolean = true
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Include HATEOAS-style links in results"
+    hateoasMode: Boolean = true
+    "Display results in this language"
+    languageCode: String
+    "The maximum number of results to retrieve"
+    limit: Int = 10
+    "The zero-ary offset index into the results"
+    offset: Int
+    "How to sort regions. \nFormat: ±SORT_FIELD \nwhere SORT_FIELD = fipsCode | isoCode | name"
+    sort: String
+  ): Country_Regions_Response @httpOperation(path: "/geo/countries/{args.countryId}/regions", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"namePrefix\":\"namePrefix\",\"namePrefixDefaultLangResults\":\"namePrefixDefaultLangResults\",\"asciiMode\":\"asciiMode\",\"hateoasMode\":\"hateoasMode\",\"languageCode\":\"languageCode\",\"limit\":\"limit\",\"offset\":\"offset\",\"sort\":\"sort\"}")
+  "Get the details of a specific country region, including number of cities."
+  getRegion(
+    "An ISO-3166 country code or WikiData id"
+    countryId: String!
+    "An ISO-3166 or FIPS region code"
+    regionCode: String!
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Display results in this language"
+    languageCode: String
+  ): Country_Region_Response @httpOperation(path: "/geo/countries/{args.countryId}/regions/{args.regionCode}", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"asciiMode\":\"asciiMode\",\"languageCode\":\"languageCode\"}")
+  "Get the administrative divisions in a specific country region. The country and region info is omitted in the\nresponse.\n"
+  findRegionDivisions(
+    "An ISO-3166 country code or WikiData id"
+    countryId: String!
+    "An ISO-3166 or FIPS region code"
+    regionCode: String!
+    "Only places having at least this population"
+    minPopulation: Int
+    "Only places having no more than this population"
+    maxPopulation: Int
+    "Only entities whose names start with this prefix. If languageCode is set, the prefix will be matched on the name\nas it appears in that language."
+    namePrefix: String
+    "When name-prefix matching, whether or not to match on names in the default language if a non-default languageCode is set."
+    namePrefixDefaultLangResults: Boolean = true
+    "Only places in these time-zones (comma-delimited)"
+    timeZoneIds: String
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Include HATEOAS-style links in results"
+    hateoasMode: Boolean = true
+    "Display results in this language"
+    languageCode: String
+    "The maximum number of results to retrieve"
+    limit: Int = 10
+    "The zero-ary offset index into the results"
+    offset: Int
+    "How to sort place results. \n'Format: ±SORT_FIELD,±SORT_FIELD' \nwhere SORT_FIELD = elevation | name | population"
+    sort: String
+    "Whether to include any divisions marked deleted: ALL | SINCE_YESTERDAY | SINCE_LAST_WEEK | NONE"
+    includeDeleted: String = "NONE"
+  ): Populated_Places_Response @httpOperation(path: "/geo/countries/{args.countryId}/regions/{args.regionCode}/adminDivisions", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"minPopulation\":\"minPopulation\",\"maxPopulation\":\"maxPopulation\",\"namePrefix\":\"namePrefix\",\"namePrefixDefaultLangResults\":\"namePrefixDefaultLangResults\",\"timeZoneIds\":\"timeZoneIds\",\"asciiMode\":\"asciiMode\",\"hateoasMode\":\"hateoasMode\",\"languageCode\":\"languageCode\",\"limit\":\"limit\",\"offset\":\"offset\",\"sort\":\"sort\",\"includeDeleted\":\"includeDeleted\"}")
+  "Get the cities in a specific country region. The country and region info is omitted in the response.\n"
+  findRegionCities(
+    "An ISO-3166 country code or WikiData id"
+    countryId: String!
+    "An ISO-3166 or FIPS region code"
+    regionCode: String!
+    "Only places having at least this population"
+    minPopulation: Int
+    "Only places having no more than this population"
+    maxPopulation: Int
+    "Only entities whose names start with this prefix. If languageCode is set, the prefix will be matched on the name\nas it appears in that language."
+    namePrefix: String
+    "When name-prefix matching, whether or not to match on names in the default language if a non-default languageCode is set."
+    namePrefixDefaultLangResults: Boolean = true
+    "Only places in these time-zones (comma-delimited)"
+    timeZoneIds: String
+    "Only places for these types (comma-delimited): CITY | ADM2"
+    types: String
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Include HATEOAS-style links in results"
+    hateoasMode: Boolean = true
+    "Display results in this language"
+    languageCode: String
+    "The maximum number of results to retrieve"
+    limit: Int = 10
+    "The zero-ary offset index into the results"
+    offset: Int
+    "How to sort place results. \n'Format: ±SORT_FIELD,±SORT_FIELD' \nwhere SORT_FIELD = elevation | name | population"
+    sort: String
+    "Whether to include any divisions marked deleted: ALL | SINCE_YESTERDAY | SINCE_LAST_WEEK | NONE"
+    includeDeleted: String = "NONE"
+  ): Populated_Places_Response @httpOperation(path: "/geo/countries/{args.countryId}/regions/{args.regionCode}/cities", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"minPopulation\":\"minPopulation\",\"maxPopulation\":\"maxPopulation\",\"namePrefix\":\"namePrefix\",\"namePrefixDefaultLangResults\":\"namePrefixDefaultLangResults\",\"timeZoneIds\":\"timeZoneIds\",\"types\":\"types\",\"asciiMode\":\"asciiMode\",\"hateoasMode\":\"hateoasMode\",\"languageCode\":\"languageCode\",\"limit\":\"limit\",\"offset\":\"offset\",\"sort\":\"sort\",\"includeDeleted\":\"includeDeleted\"}")
+  "Find cities near the given location, filtering by optional criteria. If no criteria are set, you will get back\nall known cities.\n"
+  findCitiesNearLocation(
+    "A latitude/longitude in ISO-6709 format: ±DD.DDDD±DDD.DDDD"
+    locationId: String!
+    "The location radius within which to find places"
+    radius: Int
+    "The unit of distance: MI | KM"
+    distanceUnit: String = "MI"
+    "Only places in these countries (comma-delimited country codes or WikiData ids)"
+    countryIds: String
+    "Only places NOT in these countries (comma-delimited country codes or WikiData ids)"
+    excludedCountryIds: String
+    "Only places having at least this population"
+    minPopulation: Int
+    "Only places having no more than this population"
+    maxPopulation: Int
+    "Only entities whose names start with this prefix. If languageCode is set, the prefix will be matched on the name\nas it appears in that language."
+    namePrefix: String
+    "When name-prefix matching, whether or not to match on names in the default language if a non-default languageCode is set."
+    namePrefixDefaultLangResults: Boolean = true
+    "Only places in these time-zones (comma-delimited)"
+    timeZoneIds: String
+    "Only places for these types (comma-delimited): CITY | ADM2"
+    types: String
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Include HATEOAS-style links in results"
+    hateoasMode: Boolean = true
+    "Display results in this language"
+    languageCode: String
+    "The maximum number of results to retrieve"
+    limit: Int = 10
+    "The zero-ary offset index into the results"
+    offset: Int
+    "How to sort places. \nFormat: ±SORT_FIELD,±SORT_FIELD \nwhere SORT_FIELD = countryCode | elevation | name | population"
+    sort: String
+    "Whether to include any divisions marked deleted: ALL | SINCE_YESTERDAY | SINCE_LAST_WEEK | NONE"
+    includeDeleted: String = "NONE"
+  ): Populated_Places_Response @httpOperation(path: "/geo/locations/{args.locationId}/nearbyCities", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"radius\":\"radius\",\"distanceUnit\":\"distanceUnit\",\"countryIds\":\"countryIds\",\"excludedCountryIds\":\"excludedCountryIds\",\"minPopulation\":\"minPopulation\",\"maxPopulation\":\"maxPopulation\",\"namePrefix\":\"namePrefix\",\"namePrefixDefaultLangResults\":\"namePrefixDefaultLangResults\",\"timeZoneIds\":\"timeZoneIds\",\"types\":\"types\",\"asciiMode\":\"asciiMode\",\"hateoasMode\":\"hateoasMode\",\"languageCode\":\"languageCode\",\"limit\":\"limit\",\"offset\":\"offset\",\"sort\":\"sort\",\"includeDeleted\":\"includeDeleted\"}")
+  "Find administrative divisions near the given location, filtering by optional criteria. If no criteria are set,\nyou will get back all known divisions.\n"
+  findDivisionsNearLocation(
+    "A latitude/longitude in ISO-6709 format: ±DD.DDDD±DDD.DDDD"
+    locationId: String!
+    "The location radius within which to find places"
+    radius: Int
+    "The unit of distance: MI | KM"
+    distanceUnit: String = "MI"
+    "Only places in these countries (comma-delimited country codes or WikiData ids)"
+    countryIds: String
+    "Only places NOT in these countries (comma-delimited country codes or WikiData ids)"
+    excludedCountryIds: String
+    "Only places having at least this population"
+    minPopulation: Int
+    "Only places having no more than this population"
+    maxPopulation: Int
+    "Only entities whose names start with this prefix. If languageCode is set, the prefix will be matched on the name\nas it appears in that language."
+    namePrefix: String
+    "When name-prefix matching, whether or not to match on names in the default language if a non-default languageCode is set."
+    namePrefixDefaultLangResults: Boolean = true
+    "Only places in these time-zones (comma-delimited)"
+    timeZoneIds: String
+    "Display results using ASCII characters"
+    asciiMode: Boolean
+    "Include HATEOAS-style links in results"
+    hateoasMode: Boolean = true
+    "Display results in this language"
+    languageCode: String
+    "The maximum number of results to retrieve"
+    limit: Int = 10
+    "The zero-ary offset index into the results"
+    offset: Int
+    "How to sort places. \nFormat: ±SORT_FIELD,±SORT_FIELD \nwhere SORT_FIELD = countryCode | elevation | name | population"
+    sort: String
+    "Whether to include any divisions marked deleted: ALL | SINCE_YESTERDAY | SINCE_LAST_WEEK | NONE"
+    includeDeleted: String = "NONE"
+  ): Populated_Places_Response @httpOperation(path: "/geo/locations/{args.locationId}/nearbyDivisions", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"radius\":\"radius\",\"distanceUnit\":\"distanceUnit\",\"countryIds\":\"countryIds\",\"excludedCountryIds\":\"excludedCountryIds\",\"minPopulation\":\"minPopulation\",\"maxPopulation\":\"maxPopulation\",\"namePrefix\":\"namePrefix\",\"namePrefixDefaultLangResults\":\"namePrefixDefaultLangResults\",\"timeZoneIds\":\"timeZoneIds\",\"asciiMode\":\"asciiMode\",\"hateoasMode\":\"hateoasMode\",\"languageCode\":\"languageCode\",\"limit\":\"limit\",\"offset\":\"offset\",\"sort\":\"sort\",\"includeDeleted\":\"includeDeleted\"}")
+  "Find currencies, filtering by optional criteria. If no criteria are set, you will get back all known currencies."
+  getCurrencies(
+    "Currencies for this country id"
+    countryId: String!
+    "Include HATEOAS-style links in results"
+    hateoasMode: Boolean = true
+    "The maximum number of results to retrieve"
+    limit: Int = 10
+    "The zero-ary offset index into the results"
+    offset: Int
+  ): Currencies_Response @httpOperation(path: "/locale/currencies", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"countryId\":\"countryId\",\"hateoasMode\":\"hateoasMode\",\"limit\":\"limit\",\"offset\":\"offset\"}")
+  "Get all supported languages"
+  getLanguages(
+    "Include HATEOAS-style links in results"
+    hateoasMode: Boolean = true
+    "The maximum number of results to retrieve"
+    limit: Int = 10
+    "The zero-ary offset index into the results"
+    offset: Int
+  ): Languages_Response @httpOperation(path: "/locale/languages", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"hateoasMode\":\"hateoasMode\",\"limit\":\"limit\",\"offset\":\"offset\"}")
+  "Get all known locales"
+  getLocales(
+    "Include HATEOAS-style links in results"
+    hateoasMode: Boolean = true
+    "The maximum number of results to retrieve"
+    limit: Int = 10
+    "The zero-ary offset index into the results"
+    offset: Int
+  ): Locales_Response @httpOperation(path: "/locale/locales", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"hateoasMode\":\"hateoasMode\",\"limit\":\"limit\",\"offset\":\"offset\"}")
+  "Get all known time-zones"
+  getTimezones(
+    "Include HATEOAS-style links in results"
+    hateoasMode: Boolean = true
+    "The maximum number of results to retrieve"
+    limit: Int = 10
+    "The zero-ary offset index into the results"
+    offset: Int
+  ): Time_Zones_Response @httpOperation(path: "/locale/timezones", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET, queryParamArgMap: "{\"hateoasMode\":\"hateoasMode\",\"limit\":\"limit\",\"offset\":\"offset\"}")
+  "Get time-zone"
+  getTimeZone(
+    "A time-zone id"
+    zoneId: String!
+  ): Time_Zone_Response @httpOperation(path: "/locale/timezones/{args.zoneId}", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET)
+  "Get time-zone date-time"
+  getTimeZoneDateTime(
+    "A time-zone id"
+    zoneId: String!
+  ): Date_Time_Response @httpOperation(path: "/locale/timezones/{args.zoneId}/dateTime", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET)
+  "Get time-zone time"
+  getTimeZoneTime(
+    "A time-zone id"
+    zoneId: String!
+  ): Time_Response @httpOperation(path: "/locale/timezones/{args.zoneId}/time", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"Accept\":\"application/json\"}", httpMethod: GET)
+}
+
+scalar ResolveToSourceArgs
