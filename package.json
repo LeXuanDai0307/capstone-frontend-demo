@@ -1,0 +1,23 @@
+{
+  "name": "graphql-mesh-docs-first-gateway",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/charlypoly/graphql-mesh-docs-first-gateway.git",
+  "author": "Charly POLY <cpoly55@gmail.com>",
+  "license": "MIT",
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "start-single-source": "concurrently --kill-others \"yarn workspace books-service start\" \"yarn workspace mesh-single-source start\"",
+    "start-single-source-no-source-definition": "concurrently --kill-others \"yarn workspace books-service start\" \"yarn workspace single-source-no-source-definition start\"",
+    "start-multiple-sources": "concurrently --kill-others \"yarn workspace authors-service start\" \"yarn workspace stores-service start\"  \"yarn workspace books-service start\"  \"yarn workspace mesh-multiple-sources start\"",
+    "start-multiple-sources-prog-resolvers": "concurrently --kill-others \"yarn workspace authors-service start\" \"yarn workspace stores-service start\"  \"yarn workspace books-service start\"  \"yarn workspace multiple-sources-prog-resolvers start\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "packageManager": "yarn@3.6.1"
+}

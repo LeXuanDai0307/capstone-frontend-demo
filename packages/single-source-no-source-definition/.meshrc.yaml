@@ -1,0 +1,12 @@
+sources:
+  - name: Books
+    handler:
+      jsonSchema:
+        endpoint: http://localhost:3002/
+        operations:
+          - type: Query
+            field: book
+            path: /books/{args.id}
+            method: GET
+            responseSample: ./samples/book-1.json
+            responseTypeName: Book
