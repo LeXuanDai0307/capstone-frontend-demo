@@ -14,27 +14,11 @@ sources:
             type: Query
             field: $1
           useRegExpForFields: true
-    - encapsulate:
-        applyTo:
-          query: true
-          mutation: true
-          subscription: false
-
-  - name: Cities
-    handler:
-      openapi:
-        source: ./services/cities-service/cities-definition.json
-        ignoreErrorResponses: true
-        operationHeaders:
-          'X-RapidAPI-Key': f93d3b393dmsh13fea7cb6981b2ep1dba0ajsn654ffeb48c26
-    transforms:
-    - rename:
-        renames:
         - from:
-            type: Query
-            field: (.*)UsingGET
+            type: Mutation
+            field: AppController_(.*)
           to:
-            type: Query
+            type: Mutation
             field: $1
           useRegExpForFields: true
     - encapsulate:

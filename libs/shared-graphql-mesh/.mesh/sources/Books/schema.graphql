@@ -1,12 +1,13 @@
 schema {
   query: Query
+  mutation: Mutation
 }
 
 directive @globalOptions(sourceName: String, endpoint: String, operationHeaders: ObjMap, queryStringOptions: ObjMap, queryParams: ObjMap) on OBJECT
 
 directive @httpOperation(path: String, operationSpecificHeaders: ObjMap, httpMethod: HTTPMethod, isBinary: Boolean, requestBaseBody: ObjMap, queryParamArgMap: ObjMap, queryStringOptionsByParam: ObjMap) on FIELD_DEFINITION
 
-type Query @globalOptions(sourceName: "Cities", endpoint: "https://wft-geo-db.p.rapidapi.com/v1", operationHeaders: "{\"X-RapidAPI-Key\":\"f93d3b393dmsh13fea7cb6981b2ep1dba0ajsn654ffeb48c26\"}") {
+type Query @globalOptions(sourceName: "Books", endpoint: "http://localhost:3002/") {
   Books: BooksQuery!
 }
 
@@ -18,6 +19,22 @@ type Book {
 }
 
 type Category {
+  id: String!
+  name: String!
+}
+
+type Mutation {
+  Books: BooksMutation!
+}
+
+input Book_Input {
+  id: String!
+  authorId: String!
+  categorieId: String!
+  title: String!
+}
+
+input Category_Input {
   id: String!
   name: String!
 }
@@ -41,4 +58,9 @@ type BooksQuery {
   categories: [Category] @httpOperation(path: "/categories", operationSpecificHeaders: "{\"accept\":\"application/json\"}", httpMethod: GET)
   book(id: String!): Book @httpOperation(path: "/books/{args.id}", operationSpecificHeaders: "{\"accept\":\"application/json\"}", httpMethod: GET)
   category(id: String!): Category @httpOperation(path: "/categories/{args.id}", operationSpecificHeaders: "{\"accept\":\"application/json\"}", httpMethod: GET)
+}
+
+type BooksMutation {
+  create(input: Book_Input): Book @httpOperation(path: "/books", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"accept\":\"application/json\"}", httpMethod: POST)
+  createCategory(input: Category_Input): Category @httpOperation(path: "/categories", operationSpecificHeaders: "{\"Content-Type\":\"application/json\",\"accept\":\"application/json\"}", httpMethod: POST)
 }

@@ -16,7 +16,6 @@ export type Scalars = {
   ID: { input: string; output: string; }
   /** The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text. */
   String: { input: string; output: string; }
-  /** The `Boolean` scalar type represents `true` or `false`. */
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
@@ -37,6 +36,22 @@ export type Book = {
 export type Category = {
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];
+};
+
+export type Mutation = {
+  Books: BooksMutation;
+};
+
+export type Book_Input = {
+  id: Scalars['String']['input'];
+  authorId: Scalars['String']['input'];
+  categorieId: Scalars['String']['input'];
+  title: Scalars['String']['input'];
+};
+
+export type Category_Input = {
+  id: Scalars['String']['input'];
+  name: Scalars['String']['input'];
 };
 
 export type HTTPMethod =
@@ -67,13 +82,29 @@ export type BooksQuerycategoryArgs = {
   id: Scalars['String']['input'];
 };
 
+export type BooksMutation = {
+  create?: Maybe<Book>;
+  createCategory?: Maybe<Category>;
+};
+
+
+export type BooksMutationcreateArgs = {
+  input?: InputMaybe<Book_Input>;
+};
+
+
+export type BooksMutationcreateCategoryArgs = {
+  input?: InputMaybe<Category_Input>;
+};
+
   export type QuerySdk = {
       /** undefined **/
   Books: InContextSdkMethod<Query['Books'], {}, MeshContext>
   };
 
   export type MutationSdk = {
-    
+      /** undefined **/
+  Books: InContextSdkMethod<Mutation['Books'], {}, MeshContext>
   };
 
   export type SubscriptionSdk = {

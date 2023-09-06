@@ -21,6 +21,33 @@
           }
         },
         "tags": ["books"]
+      },
+      "post": {
+        "operationId": "AppController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Book"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Book"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["books"]
       }
     },
     "/categories": {
@@ -37,6 +64,33 @@
                   "items": {
                     "$ref": "#/components/schemas/Category"
                   }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["books"]
+      },
+      "post": {
+        "operationId": "AppController_createCategory",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Category"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
                 }
               }
             }

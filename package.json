@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
+    "start": "nx run-many -t start --all",
     "dev:admin": "nx serve capstone-admin",
     "dev:client": "nx serve capstone-client",
-    "dev:bff": "nx serve capstone-bff",
-    "mesh-build": "nx run shared-graphql-mesh:mesh-build"
+    "dev:bff": "nx run shared-graphql-mesh:mesh-build && nx serve capstone-bff"
   },
   "private": true,
   "devDependencies": {
