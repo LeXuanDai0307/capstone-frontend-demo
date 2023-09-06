@@ -20,7 +20,38 @@
             }
           }
         },
-        "tags": ["books"]
+        "tags": [
+          "books"
+        ]
+      },
+      "post": {
+        "operationId": "AppController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Book"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Book"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "books"
+        ]
       }
     },
     "/categories": {
@@ -42,7 +73,38 @@
             }
           }
         },
-        "tags": ["books"]
+        "tags": [
+          "books"
+        ]
+      },
+      "post": {
+        "operationId": "AppController_createCategory",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Category"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "books"
+        ]
       }
     },
     "/books/{id}": {
@@ -73,7 +135,9 @@
             "description": ""
           }
         },
-        "tags": ["books"]
+        "tags": [
+          "books"
+        ]
       }
     },
     "/categories/{id}": {
@@ -101,7 +165,9 @@
             }
           }
         },
-        "tags": ["books"]
+        "tags": [
+          "books"
+        ]
       }
     }
   },
@@ -140,7 +206,12 @@
             "example": "Dune"
           }
         },
-        "required": ["id", "authorId", "categorieId", "title"]
+        "required": [
+          "id",
+          "authorId",
+          "categorieId",
+          "title"
+        ]
       },
       "Category": {
         "type": "object",
@@ -154,7 +225,10 @@
             "example": "Fiction"
           }
         },
-        "required": ["id", "name"]
+        "required": [
+          "id",
+          "name"
+        ]
       }
     }
   }

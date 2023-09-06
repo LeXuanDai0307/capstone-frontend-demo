@@ -1,4 +1,5 @@
-import { Controller, Get, Param } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { Book } from './entities/Book';
@@ -56,5 +57,23 @@ export class AppController {
   })
   category(@Param() params) {
     return this.appService.findOneCategory(params.id);
+  }
+
+  @Post('/books')
+  @ApiResponse({
+    status: 200,
+    type: Book,
+  })
+  async create(@Body() book: Book) {
+    return await this.appService.createBook(book);
+  }
+
+  @Post('/categories')
+  @ApiResponse({
+    status: 200,
+    type: Category,
+  })
+  async createCategory(@Body() category: Category) {
+    return await this.appService.createCategory(category);
   }
 }

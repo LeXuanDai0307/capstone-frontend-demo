@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Book } from './entities/Book';
 import { Category } from './entities/Category';
 
@@ -44,5 +45,38 @@ export class AppService {
 
   findOneCategory(id: string): Category | null {
     return categories.find((c) => c.id === id);
+  }
+
+  async createBook(book: Book): Promise<Book> {
+    try {
+      if (books.find((b) => b.id === book.id)) {
+        throw new Error('Book already exists');
+      }
+
+      setTimeout(() => {
+        books.push(book);
+      }, 1000);
+      return book;
+    } catch (error) {
+      throw new HttpException('Error creating book', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async createCategory(category: Category): Promise<Category> {
+    try {
+      if (categories.find((c) => c.id === category.id)) {
+        throw new Error('Category already exists');
+      }
+
+      setTimeout(() => {
+        categories.push(category);
+      }, 1000);
+      return category;
+    } catch (error) {
+      throw new HttpException(
+        'Error creating category',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }
