@@ -2,3 +2,8 @@
 import { Book } from '../../.mesh';
 
 export interface IBook extends Book {}
+enum ESizeTest {
+  a,
+  b,
+  c,
+}
