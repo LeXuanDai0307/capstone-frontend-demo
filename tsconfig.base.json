@@ -15,9 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@libs/shared-components": ["libs/shared-components/src/index.ts"],
-      "@libs/shared-graphql-mesh": ["libs/shared-graphql-mesh/src/index.ts"],
-      "@libs/shared-types": ["libs/shared-types/src/index.ts"]
+      "@libs/shared-common": ["libs/shared-common/src/index.ts"],
+      "@libs/shared-components": ["libs/shared-components/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

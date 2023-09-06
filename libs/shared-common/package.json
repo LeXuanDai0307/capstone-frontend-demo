@@ -1,6 +1,11 @@
 {
-  "name": "@libs/shared-types",
+  "name": "@libs/shared-common",
   "version": "0.0.1",
+  "scripts": {
+    "mesh-start": "mesh start",
+    "mesh-dev": "mesh dev",
+    "mesh-build": "mesh build"
+  },
   "dependencies": {
     "tslib": "^2.3.0"
   },

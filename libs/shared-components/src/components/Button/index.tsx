@@ -1,22 +1,22 @@
-import { Size } from '@libs/shared-types';
+import { ESize } from '@libs/shared-common';
 
 export interface IButtonProps {
   label: string;
-  size?: Size;
+  size?: ESize;
 }
 
-export function Button({ label, size = Size.SM }: IButtonProps) {
+export function Button({ label, size = ESize.SM }: IButtonProps) {
   let heightStyle;
   switch (size) {
-    case Size.SM: {
+    case ESize.SM: {
       heightStyle = '24px';
       break;
     }
-    case Size.MD: {
+    case ESize.MD: {
       heightStyle = '32px';
       break;
     }
-    case Size.LG: {
+    case ESize.LG: {
       heightStyle = '48px';
       break;
     }

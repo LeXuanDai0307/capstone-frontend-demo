@@ -1,9 +1,8 @@
-import { Button } from '@libs/shared-components';
-
 import { Route, Routes, Link } from 'react-router-dom';
-import { IBook, Size } from '@libs/shared-types';
 import { gql, useQuery } from '@apollo/client';
 import NxWelcome from './nx-welcome';
+import { IBook, ESize } from '@libs/shared-common';
+import { Button } from '@libs/shared-components';
 
 const GET_BOOK = gql`
   query GetBook($id: String!) {
@@ -27,8 +26,8 @@ export function App() {
 
   return (
     <div>
-      <Button label="Click to Explore" size={Size.LG} />
       <h1>Book title: {book?.title || 'Book title'}</h1>
+      <Button label="Click me" size={ESize.LG} />
       <NxWelcome title="capstone-client" />
       <br />
       <hr />
