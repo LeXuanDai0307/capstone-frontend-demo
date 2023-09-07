@@ -5,29 +5,29 @@ sources:
         endpoint: http://localhost:3002/
         source: ./services/books-service/books-definition.json
     transforms:
-    - rename:
-       renames:
-        - from:
-            type: Query
-            field: AppController_(.*)
-          to:
-            type: Query
-            field: $1
-          useRegExpForFields: true
-        - from:
-            type: Mutation
-            field: AppController_(.*)
-          to:
-            type: Mutation
-            field: $1
-          useRegExpForFields: true
-    - encapsulate:
-        applyTo:
-          query: true
-          mutation: true
-          subscription: false
+      - rename:
+          renames:
+            - from:
+                type: Query
+                field: AppController_(.*)
+              to:
+                type: Query
+                field: $1
+              useRegExpForFields: true
+            - from:
+                type: Mutation
+                field: AppController_(.*)
+              to:
+                type: Mutation
+                field: $1
+              useRegExpForFields: true
+      - encapsulate:
+          applyTo:
+            query: true
+            mutation: true
+            subscription: false
 
-additionalTypeDefs: | 
+additionalTypeDefs: |
   extend type Book {
     category: Category @resolveTo(
       sourceName: "Books"                                 

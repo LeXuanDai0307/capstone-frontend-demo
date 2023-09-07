@@ -31,7 +31,9 @@ export function App() {
 
   return (
     <div>
-      <h1 className="sdf">Book title: {book?.title || 'Book title'}</h1>
+      <h1 key={1} className="sdf">
+        Book title: {book?.title || 'Book title'}
+      </h1>
       <Button label="Click me" size={ESize.LG} />
       <NxWelcome title="capstone-client" />
       <br />

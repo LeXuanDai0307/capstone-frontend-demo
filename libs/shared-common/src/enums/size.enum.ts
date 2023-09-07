@@ -3,9 +3,3 @@ export enum ESize {
   MD = 'md',
   LG = 'lg',
 }
-
-enum ESizeTest {
-  a,
-  b,
-  c,
-}
