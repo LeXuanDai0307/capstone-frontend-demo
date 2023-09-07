@@ -1,7 +1,8 @@
 {
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["@nx"],
+  "plugins": ["@nx", "@typescript-eslint"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
@@ -18,6 +19,45 @@
               }
             ]
           }
+        ],
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "variable",
+            "format": ["camelCase", "PascalCase", "UPPER_CASE"]
+          },
+          {
+            "selector": "variable",
+            "types": ["boolean"],
+            "format": ["camelCase", "PascalCase", "UPPER_CASE"],
+            "prefix": [
+              "is",
+              "are",
+              "should",
+              "must",
+              "can",
+              "have",
+              "has",
+              "did",
+              "will",
+              "enable",
+              "require",
+              "force"
+            ]
+          },
+          {
+            "selector": "variable",
+            "types": ["array"],
+            "format": ["camelCase", "PascalCase", "UPPER_CASE"],
+            "custom": {
+              "match": true,
+              "regex": "[s|List|S|LIST]$"
+            }
+          },
+          {
+            "selector": "enumMember",
+            "format": ["PascalCase", "UPPER_CASE"]
+          }
         ]
       }
     },
@@ -31,5 +71,8 @@
       "extends": ["plugin:@nx/javascript"],
       "rules": {}
     }
-  ]
+  ],
+  "parserOptions": {
+    "project": ["./tsconfig.base.json"]
+  }
 }

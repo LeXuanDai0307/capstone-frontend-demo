@@ -2,7 +2,7 @@
  * This is not a production server yet!
  * This is only a minimal backend to get started.
  */
-import { createBuiltMeshHTTPHandler } from '@libs/shared-graphql-mesh';
+import { createBuiltMeshHTTPHandler } from '@libs/shared-common';
 import { config } from 'dotenv';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import * as path from 'path';
