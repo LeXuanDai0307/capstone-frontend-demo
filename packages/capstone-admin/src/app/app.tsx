@@ -1,5 +1,3 @@
-import { Button } from '@libs/shared-components';
-
 import NxWelcome from './nx-welcome';
 
 export function App() {
