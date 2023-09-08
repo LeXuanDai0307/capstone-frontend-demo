@@ -1,11 +1,6 @@
 import { BFFResolvers } from '../../@types';
 
 export const bookTypeDef = /* GraphQL */ `
-  type Category {
-    id: String!
-    name: String!
-  }
-
   type Book {
     id: String!
     authorId: String!
@@ -27,22 +22,30 @@ export const bookTypeDef = /* GraphQL */ `
   }
 
   type Mutation {
-    create(input: Book_Input): Book
+    createBook(data: Book_Input): Book
   }
 `;
 
 export const bookResolver: BFFResolvers = {
   Query: {
     book: async (_, { id }, { dataSources }) => {
-      return dataSources.booksApi.getBook(id);
+      const category = {
+        id: '1',
+        name: 'test',
+      };
+      const book = await dataSources.booksApi.getBook(id);
+      return {
+        category,
+        ...book,
+      };
     },
     books: async (_, __, { dataSources }) => {
       return dataSources.booksApi.getBooks();
     },
   },
   Mutation: {
-    create() {
-      return 'Hello world!';
+    createBook: async (_, { data }, { dataSources }) => {
+      return dataSources.booksApi.createBook(data);
     },
   },
 };
