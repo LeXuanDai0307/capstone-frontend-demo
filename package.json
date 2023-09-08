@@ -66,6 +66,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.8.1",
+    "@apollo/datasource-rest": "^6.1.0",
     "@apollo/server": "^4.9.3",
     "@graphql-mesh/cli": "^0.87.2",
     "@graphql-mesh/openapi": "^0.95.3",
@@ -73,6 +74,8 @@
     "@graphql-mesh/transform-encapsulate": "^0.95.2",
     "@graphql-mesh/transform-filter-schema": "^0.95.2",
     "@graphql-mesh/transform-rename": "^0.95.2",
+    "@graphql-tools/merge": "^9.0.0",
+    "@graphql-tools/schema": "^10.0.0",
     "@swc/helpers": "~0.5.0",
     "axios": "^1.0.0",
     "body-parser": "^1.20.2",
