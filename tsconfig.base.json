@@ -16,6 +16,15 @@
     "baseUrl": ".",
     "paths": {
       "@libs/shared-common": ["libs/shared-common/src/index.ts"],
+      "@libs/shared-common/enums": ["libs/shared-common/src/enums/index.ts"],
+      "@libs/shared-common/graphql-mesh": [
+        "libs/shared-common/src/graphql-mesh/index.ts"
+      ],
+      "@libs/shared-common/interfaces": [
+        "libs/shared-common/src/interfaces/index.ts"
+      ],
+      "@libs/shared-common/types": ["libs/shared-common/src/types/index.ts"],
+      "@libs/shared-common/utils": ["libs/shared-common/src/utils/index.ts"],
       "@libs/shared-components": ["libs/shared-components/src/index.ts"]
     }
   },

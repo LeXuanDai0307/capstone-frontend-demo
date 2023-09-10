@@ -1,4 +1,4 @@
-import { ESize } from '@libs/shared-common';
+import { ESize } from '@libs/shared-common/enums';
 
 export interface IButtonProps {
   label: string;

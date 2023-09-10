@@ -1,6 +1,7 @@
 import { Link, Route, Routes } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
-import { ESize, IBook } from '@libs/shared-common';
+import { ESize } from '@libs/shared-common/enums';
+import { IBook } from '@libs/shared-common/interfaces';
 import { Button } from '@libs/shared-components';
 
 import NxWelcome from './nx-welcome';
