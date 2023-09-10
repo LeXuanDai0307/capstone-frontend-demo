@@ -8,12 +8,12 @@ import { expressMiddleware } from '@apollo/server/express4';
 import cors from 'cors';
 import http from 'http';
 import bodyParser from 'body-parser';
-import { createBuiltMeshHTTPHandler } from '@libs/shared-common';
 import { config } from 'dotenv';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import * as path from 'path';
 import schema from './schema';
 import dataSources from './dataSources';
+import { createBuiltMeshHTTPHandler } from '@libs/shared-common/graphql-mesh';
 config();
 
 interface MyContext {
