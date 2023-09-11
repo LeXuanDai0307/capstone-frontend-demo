@@ -1,12 +1,17 @@
 {
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["@nx", "@typescript-eslint"],
-  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  "plugins": ["@nx", "@typescript-eslint", "sonarjs"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:sonarjs/recommended"
+  ],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
+        "sonarjs/cognitive-complexity": "error",
         "@nx/enforce-module-boundaries": [
           "error",
           {
@@ -72,6 +77,7 @@
       "rules": {}
     }
   ],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": ["./tsconfig.base.json"]
   }
